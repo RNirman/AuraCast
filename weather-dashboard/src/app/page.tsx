@@ -22,7 +22,8 @@ import SearchInput from '@/components/SearchInput';
 export default async function Home({ searchParams }: HomePageProps) {
   const API_KEY = process.env.OPENWEATHERMAP_API_KEY; 
 
-  const city = searchParams?.city || "London";
+  const params = await searchParams;
+  const city = params?.city || "Colombo";
 
   if (!API_KEY) {
     return <div className="text-center p-8">API Key is missing in .env.local!</div>;

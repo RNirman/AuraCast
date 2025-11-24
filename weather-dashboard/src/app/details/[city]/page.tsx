@@ -57,26 +57,26 @@ export default async function WeatherDetailsPage({ params, searchParams }: Weath
     const weatherData: WeatherData = await res.json();
     
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-100 dark:bg-[#111113] transition-colors duration-200">
         <div className="flex justify-end mb-4 max-w-xl mx-auto">
-        <UnitToggle />
-      </div>
-        <h1 className="text-4xl font-bold mb-8">Weather Details for {weatherData.name}</h1>
-        
+          <UnitToggle />
+        </div>
+        <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">Weather Details for {weatherData.name}</h1>
+
         <div className="text-center">
-          <p className="text-6xl font-extrabold mb-4">{Math.round(weatherData.main.temp)}{unitSymbol}</p>
-          <p className="text-xl capitalize mb-6">{weatherData.weather[0].description}</p>
-          
+          <p className="text-6xl font-extrabold mb-4 text-gray-800 dark:text-gray-100">{Math.round(weatherData.main.temp)}{unitSymbol}</p>
+          <p className="text-xl capitalize mb-6 text-gray-700 dark:text-gray-300">{weatherData.weather[0].description}</p>
+
           <div className="mt-6 space-y-2 mb-6">
-            <p className="text-lg">Feels Like: {Math.round(weatherData.main.feels_like)}{unitSymbol}</p>
-            <p className="text-lg">Humidity: {weatherData.main.humidity}%</p>
-            <p className="text-lg">Pressure: {weatherData.main.pressure} hPa</p>
-            <p className="text-lg">Wind Speed: {weatherData.wind.speed} m/s</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300">Feels Like: {Math.round(weatherData.main.feels_like)}{unitSymbol}</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300">Humidity: {weatherData.main.humidity}%</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300">Pressure: {weatherData.main.pressure} hPa</p>
+            <p className="text-lg text-gray-700 dark:text-gray-300">Wind Speed: {weatherData.wind.speed} m/s</p>
           </div>
 
-          <Link 
-            href="/" 
-            className="mt-6 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors"
+          <Link
+            href="/"
+            className="mt-6 bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
           >
             Back to Home
           </Link>

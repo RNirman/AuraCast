@@ -12,9 +12,7 @@ export default function SearchInput() {
     const value = query.trim();
     if (value) {
       const encoded = encodeURIComponent(value);
-      // navigate to root with encoded city query param
       router.push(`/?city=${encoded}`);
-      // clear input to show search completed
       setQuery('');
       console.log('SearchInput: navigated to', `/?city=${encoded}`);
     }
@@ -27,7 +25,7 @@ export default function SearchInput() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Enter city name..."
-        className="p-2 border border-gray-300 rounded-lg text-white bg-gray-800"
+        className="p-2 border border-gray-300 rounded-lg text-white"
       />
       <button 
         type="submit"

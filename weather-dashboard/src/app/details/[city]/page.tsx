@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import UnitToggle from '@/components/UnitToggle';
+import { weatherClassMap } from '@/utils/weather-styles';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,7 @@ interface WeatherData {
     deg: number;
   };
   weather: {
+    main: string;
     description: string;
     icon: string;
   }[];
@@ -55,28 +57,30 @@ export default async function WeatherDetailsPage({ params, searchParams }: Weath
     }
 
     const weatherData: WeatherData = await res.json();
+    const weatherMain = weatherData.weather[0].main;
+    const weatherStyle = weatherClassMap[weatherMain] || weatherClassMap['default'];
     
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-100 dark:bg-[#111113] transition-colors duration-200">
-        <div className="flex justify-end mb-4 max-w-xl mx-auto">
+      <main className={`flex min-h-screen flex-col items-center justify-center p-8 ${weatherStyle} transition-all duration-500`}>
+        <div className="flex justify-end mb-4 max-w-xl mx-auto w-full">
           <UnitToggle />
         </div>
-        <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">Weather Details for {weatherData.name}</h1>
+        <h1 className="text-4xl font-bold mb-8 drop-shadow-lg">Weather Details for {weatherData.name}</h1>
 
         <div className="text-center">
-          <p className="text-6xl font-extrabold mb-4 text-gray-800 dark:text-gray-100">{Math.round(weatherData.main.temp)}{unitSymbol}</p>
-          <p className="text-xl capitalize mb-6 text-gray-700 dark:text-gray-300">{weatherData.weather[0].description}</p>
+          <p className="text-6xl font-extrabold mb-4 drop-shadow-lg">{Math.round(weatherData.main.temp)}{unitSymbol}</p>
+          <p className="text-xl capitalize mb-6 drop-shadow">{weatherData.weather[0].description}</p>
 
-          <div className="mt-6 space-y-2 mb-6">
-            <p className="text-lg text-gray-700 dark:text-gray-300">Feels Like: {Math.round(weatherData.main.feels_like)}{unitSymbol}</p>
-            <p className="text-lg text-gray-700 dark:text-gray-300">Humidity: {weatherData.main.humidity}%</p>
-            <p className="text-lg text-gray-700 dark:text-gray-300">Pressure: {weatherData.main.pressure} hPa</p>
-            <p className="text-lg text-gray-700 dark:text-gray-300">Wind Speed: {weatherData.wind.speed} m/s</p>
+          <div className="mt-6 space-y-2 mb-6 bg-white/10 dark:bg-black/20 backdrop-blur-md p-6 rounded-lg border border-white/20">
+            <p className="text-lg drop-shadow">Feels Like: {Math.round(weatherData.main.feels_like)}{unitSymbol}</p>
+            <p className="text-lg drop-shadow">Humidity: {weatherData.main.humidity}%</p>
+            <p className="text-lg drop-shadow">Pressure: {weatherData.main.pressure} hPa</p>
+            <p className="text-lg drop-shadow">Wind Speed: {weatherData.wind.speed} m/s</p>
           </div>
 
           <Link
             href="/"
-            className="mt-6 bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
+            className="mt-6 bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-200 font-semibold drop-shadow-lg border border-white/30"
           >
             Back to Home
           </Link>

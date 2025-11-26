@@ -6,6 +6,7 @@ interface WeatherData {
     humidity: number;
   };
   weather: {
+    main: string;
     description: string;
     icon: string;
   }[];
@@ -57,6 +58,7 @@ export const dynamic = 'force-dynamic';
 import SearchInput from '@/components/SearchInput';
 import Link from 'next/link';
 import UnitToggle from '@/components/UnitToggle';
+import { weatherClassMap } from '@/utils/weather-styles';
 
 function ForecastList({ forecasts, unitSymbol }: { forecasts: DailySummary[]; unitSymbol: string }) {
   const ICON_BASE_URL = "https://openweathermap.org/img/w/";
@@ -66,25 +68,25 @@ function ForecastList({ forecasts, unitSymbol }: { forecasts: DailySummary[]; un
   }
 
   return (
-    <div className="mt-10 p-6 bg-white dark:bg-[#18181b] rounded-xl shadow-lg w-full max-w-2xl border border-gray-200 dark:border-gray-700">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-gray-900 dark:text-gray-100">5-Day Forecast</h2>
+    <div className="mt-10 p-6 bg-white/95 dark:bg-black/40 backdrop-blur-md rounded-xl shadow-xl w-full max-w-2xl border border-white/20 dark:border-gray-700/50">
+      <h2 className="text-2xl font-semibold mb-4 text-center text-white drop-shadow-lg">5-Day Forecast</h2>
       <div className="flex justify-between space-x-4 overflow-x-auto">
         {forecasts.map((day) => (
           <div
             key={day.date}
-            className="flex flex-col items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg flex-shrink-0 w-24 bg-gray-50 dark:bg-[#232326] hover:bg-gray-100 dark:hover:bg-[#2c2c31] transition-colors duration-200"
+            className="flex flex-col items-center p-3 border border-white/30 rounded-lg shrink-0 w-24 bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-black/30 transition-all duration-200 backdrop-blur-sm"
           >
-            <p className="font-bold text-lg text-gray-800 dark:text-gray-100">{day.dayName}</p>
+            <p className="font-bold text-lg text-white drop-shadow">{day.dayName}</p>
             <img
               src={`${ICON_BASE_URL}${day.icon}.png`}
               alt={day.description}
               className="w-12 h-12"
             />
-            <p className="text-xs capitalize text-gray-600 dark:text-gray-300 mb-1 text-center">{day.description}</p>
-            <p className="font-bold text-gray-800 dark:text-gray-100">
+            <p className="text-xs capitalize text-white/90 mb-1 text-center drop-shadow">{day.description}</p>
+            <p className="font-bold text-white drop-shadow">
               {Math.round(day.maxTemp)}<span className="text-sm">{unitSymbol}</span>
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-white/80">
               {Math.round(day.minTemp)}<span className="text-xs">{unitSymbol}</span>
             </p>
           </div>
@@ -158,22 +160,24 @@ export default async function Home({ searchParams }: HomePageProps) {
 
     const dailyForecasts = processForecastData(forecastData.list);
     const unitSymbol = unit === 'metric' ? '°C' : '°F';
+    const weatherMain = weatherData.weather[0].main;
+    const weatherStyle = weatherClassMap[weatherMain] || weatherClassMap['default'];
 
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-100 dark:bg-[#111113] transition-colors duration-200">
+      <main className={`flex min-h-screen flex-col items-center justify-center p-8 ${weatherStyle} transition-all duration-500`}>
         <SearchInput />
         <UnitToggle />
 
-        <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100">Weather in {weatherData.name}</h1>
-        <p className="text-6xl font-extrabold text-gray-800 dark:text-gray-100">{Math.round(weatherData.main.temp)}{unitSymbol}</p>
-        <p className="text-xl mt-2 capitalize text-gray-700 dark:text-gray-300">{weatherData.weather[0].description}</p>
-        <p className="text-lg mt-1 text-gray-700 dark:text-gray-300">Humidity: {weatherData.main.humidity}%</p>
+        <h1 className="text-4xl font-bold mb-4 drop-shadow-lg">Weather in {weatherData.name}</h1>
+        <p className="text-6xl font-extrabold drop-shadow-lg">{Math.round(weatherData.main.temp)}{unitSymbol}</p>
+        <p className="text-xl mt-2 capitalize drop-shadow">{weatherData.weather[0].description}</p>
+        <p className="text-lg mt-1 drop-shadow">Humidity: {weatherData.main.humidity}%</p>
 
         <ForecastList forecasts={dailyForecasts} unitSymbol={unitSymbol} />
 
         <Link
-          href={`/details/${weatherData.name}`}
-          className="mt-6 bg-green-600 dark:bg-green-700 text-white p-3 rounded-lg hover:bg-green-700 dark:hover:bg-green-800 transition-colors"
+          href={`/details/${weatherData.name}?unit=${unit}`}
+          className="mt-6 bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all duration-200 font-semibold drop-shadow-lg border border-white/30"
         >
           View Full Details
         </Link>

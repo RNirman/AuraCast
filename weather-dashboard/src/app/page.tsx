@@ -59,6 +59,7 @@ import SearchInput from '@/components/SearchInput';
 import Link from 'next/link';
 import UnitToggle from '@/components/UnitToggle';
 import { weatherClassMap } from '@/utils/weather-styles';
+import CityNotFoundDisplay from '@/components/CityNotFoundDisplay';
 
 function ForecastList({ forecasts, unitSymbol }: { forecasts: DailySummary[]; unitSymbol: string }) {
   const ICON_BASE_URL = "https://openweathermap.org/img/w/";
@@ -151,8 +152,12 @@ export default async function Home({ searchParams }: HomePageProps) {
       fetch(forecastUrl, { next: { revalidate: 3600 } }),
     ]);
 
+    if (currentRes.status === 404 || currentRes.status === 400) {
+        throw new Error(`City Not Found: ${city}`);
+    }
+
     if (!currentRes.ok || !forecastRes.ok) {
-      return <div className="text-center p-8">Error fetching data for {city}. City not found or API error.</div>;
+      throw new Error("API call failed with an unknown status.");
     }
 
     const weatherData: WeatherData = await currentRes.json();
@@ -184,7 +189,11 @@ export default async function Home({ searchParams }: HomePageProps) {
       </main>
     );
   } catch (error) {
+    if (error instanceof Error && error.message.startsWith('City Not Found')) {
+      return <CityNotFoundDisplay city={city} />;
+    }
+    
     console.error("Fetch error:", error);
-    return <div className="text-center p-8">An unexpected error occurred during fetching.</div>;
+    return <div className="text-center p-8 text-red-600">An unexpected error occurred. Please try again.</div>;
   }
 }

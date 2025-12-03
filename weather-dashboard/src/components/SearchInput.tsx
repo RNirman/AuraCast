@@ -25,7 +25,7 @@ export default function SearchInput() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Enter city name..."
-        className="p-2 border border-gray-300 rounded-lg text-white"
+        className="p-2 border border-gray-300 rounded-lg text-gray-900 dark:text-gray-100 bg-white/80 dark:bg-black/30 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button 
         type="submit"
